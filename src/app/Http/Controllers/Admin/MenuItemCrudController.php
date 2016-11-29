@@ -7,6 +7,7 @@ use Backpack\CRUD\app\Http\Controllers\CrudController;
 // VALIDATION: change the requests to match your own file names if you need form validation
 use Backpack\CRUD\app\Http\Requests\CrudRequest as StoreRequest;
 use Backpack\CRUD\app\Http\Requests\CrudRequest as UpdateRequest;
+use Backpack\LangFileManager\app\Models\Language;
 
 class MenuItemCrudController extends CrudController
 {
@@ -34,12 +35,21 @@ class MenuItemCrudController extends CrudController
                                 'model' => "\Backpack\MenuCRUD\app\Models\MenuItem",
                             ]);
 
+        $languages = Language::getActiveLanguagesArray();
+
+        foreach($languages as $language) {
+            $this->crud->addField([
+                'name' => 'name[' . $language['id'] . ']',
+                'label' => '名稱(' . $language['native'] . ')',
+            ]);
+        }
+//        $this->crud->addField([
+//            'name' => 'name',
+//            'label' => '名稱',
+//        ]);
+
         $this->crud->addField([
-                                'name' => 'name',
-                                'label' => 'Label',
-                            ]);
-        $this->crud->addField([
-                                'label' => 'Parent',
+                                'label' => '上層項目',
                                 'type' => 'select',
                                 'name' => 'parent_id',
                                 'entity' => 'parent',
@@ -48,7 +58,7 @@ class MenuItemCrudController extends CrudController
                             ]);
         $this->crud->addField([
                                 'name' => 'type',
-                                'label' => 'Type',
+                                'label' => '類型',
                                 'type' => 'page_or_link',
                                 'page_model' => '\Backpack\PageManager\app\Models\Page',
                             ]);
