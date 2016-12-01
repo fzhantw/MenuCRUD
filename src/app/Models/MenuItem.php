@@ -87,7 +87,8 @@ class MenuItem extends Model
                 break;
 
             case 'internal_link':
-                return url($this->link);
+                $lang = request()->route('lang');
+                return url($lang . '/' .$this->link);
                 break;
 
             default: //page_link
